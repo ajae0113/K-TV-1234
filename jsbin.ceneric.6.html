@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<!--
+Created using JS Bin
+http://jsbin.com
+
+Copyright (c) 2025 by harin0424 (http://jsbin.com/ceneric/6/edit)
+
+Released under the MIT license: http://jsbin.mit-license.org
+-->
+<meta name="robots" content="noindex">
+<meta name="robots" content="noindex">
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>KTV - 4세대 아이돌</title>
+  <script type="text/javascript">
+// <![CDATA[
+var colour="random"; // in addition to "random" can be set to any valid colour eg "#f0f" or "red"
+var sparkles=50;
+
+/****************************
+*  Tinkerbell Magic Sparkle *
+*(c)2005-13 mf2fm web-design*
+*  http://www.mf2fm.com/rv  *
+* DON'T EDIT BELOW THIS BOX *
+****************************/
+var x=ox=400;
+var y=oy=300;
+var swide=800;
+var shigh=600;
+var sleft=sdown=0;
+var tiny=new Array();
+var star=new Array();
+var starv=new Array();
+var starx=new Array();
+var stary=new Array();
+var tinyx=new Array();
+var tinyy=new Array();
+var tinyv=new Array();
+
+window.onload=function() { if (document.getElementById) {
+  var i, rats, rlef, rdow;
+  for (var i=0; i<sparkles; i++) {
+    var rats=createDiv(3, 3);
+    rats.style.visibility="hidden";
+    rats.style.zIndex="999";
+    document.body.appendChild(tiny[i]=rats);
+    starv[i]=0;
+    tinyv[i]=0;
+    var rats=createDiv(5, 5);
+    rats.style.backgroundColor="transparent";
+    rats.style.visibility="hidden";
+    rats.style.zIndex="999";
+    var rlef=createDiv(1, 5);
+    var rdow=createDiv(5, 1);
+    rats.appendChild(rlef);
+    rats.appendChild(rdow);
+    rlef.style.top="2px";
+    rlef.style.left="0px";
+    rdow.style.top="0px";
+    rdow.style.left="2px";
+    document.body.appendChild(star[i]=rats);
+  }
+  set_width();
+  sparkle();
+}}
+
+function sparkle() {
+  var c;
+  if (Math.abs(x-ox)>1 || Math.abs(y-oy)>1) {
+    ox=x;
+    oy=y;
+    for (c=0; c<sparkles; c++) if (!starv[c]) {
+      star[c].style.left=(starx[c]=x)+"px";
+      star[c].style.top=(stary[c]=y+1)+"px";
+      star[c].style.clip="rect(0px, 5px, 5px, 0px)";
+      star[c].childNodes[0].style.backgroundColor=star[c].childNodes[1].style.backgroundColor=(colour=="random")?newColour():colour;
+      star[c].style.visibility="visible";
+      starv[c]=50;
+      break;
+    }
+  }
+  for (c=0; c<sparkles; c++) {
+    if (starv[c]) update_star(c);
+    if (tinyv[c]) update_tiny(c);
+  }
+  setTimeout("sparkle()", 40);
+}
+
+function update_star(i) {
+  if (--starv[i]==25) star[i].style.clip="rect(1px, 4px, 4px, 1px)";
+  if (starv[i]) {
+    stary[i]+=1+Math.random()*3;
+    starx[i]+=(i%5-2)/5;
+    if (stary[i]<shigh+sdown) {
+      star[i].style.top=stary[i]+"px";
+      star[i].style.left=starx[i]+"px";
+    }
+    else {
+      star[i].style.visibility="hidden";
+      starv[i]=0;
+      return;
+    }
+  }
+  else {
+    tinyv[i]=50;
+    tiny[i].style.top=(tinyy[i]=stary[i])+"px";
+    tiny[i].style.left=(tinyx[i]=starx[i])+"px";
+    tiny[i].style.width="2px";
+    tiny[i].style.height="2px";
+    tiny[i].style.backgroundColor=star[i].childNodes[0].style.backgroundColor;
+    star[i].style.visibility="hidden";
+    tiny[i].style.visibility="visible"
+  }
+}
+
+function update_tiny(i) {
+  if (--tinyv[i]==25) {
+    tiny[i].style.width="1px";
+    tiny[i].style.height="1px";
+  }
+  if (tinyv[i]) {
+    tinyy[i]+=1+Math.random()*3;
+    tinyx[i]+=(i%5-2)/5;
+    if (tinyy[i]<shigh+sdown) {
+      tiny[i].style.top=tinyy[i]+"px";
+      tiny[i].style.left=tinyx[i]+"px";
+    }
+    else {
+      tiny[i].style.visibility="hidden";
+      tinyv[i]=0;
+      return;
+    }
+  }
+  else tiny[i].style.visibility="hidden";
+}
+
+document.onmousemove=mouse;
+function mouse(e) {
+  if (e) {
+    y=e.pageY;
+    x=e.pageX;
+  }
+  else {
+    set_scroll();
+    y=event.y+sdown;
+    x=event.x+sleft;
+  }
+}
+
+window.onscroll=set_scroll;
+function set_scroll() {
+  if (typeof(self.pageYOffset)=='number') {
+    sdown=self.pageYOffset;
+    sleft=self.pageXOffset;
+  }
+  else if (document.body && (document.body.scrollTop || document.body.scrollLeft)) {
+    sdown=document.body.scrollTop;
+    sleft=document.body.scrollLeft;
+  }
+  else if (document.documentElement && (document.documentElement.scrollTop || document.documentElement.scrollLeft)) {
+    sleft=document.documentElement.scrollLeft;
+    sdown=document.documentElement.scrollTop;
+  }
+  else {
+    sdown=0;
+    sleft=0;
+  }
+}
+
+window.onresize=set_width;
+function set_width() {
+  var sw_min=999999;
+  var sh_min=999999;
+  if (document.documentElement && document.documentElement.clientWidth) {
+    if (document.documentElement.clientWidth>0) sw_min=document.documentElement.clientWidth;
+    if (document.documentElement.clientHeight>0) sh_min=document.documentElement.clientHeight;
+  }
+  if (typeof(self.innerWidth)=='number' && self.innerWidth) {
+    if (self.innerWidth>0 && self.innerWidth<sw_min) sw_min=self.innerWidth;
+    if (self.innerHeight>0 && self.innerHeight<sh_min) sh_min=self.innerHeight;
+  }
+  if (document.body.clientWidth) {
+    if (document.body.clientWidth>0 && document.body.clientWidth<sw_min) sw_min=document.body.clientWidth;
+    if (document.body.clientHeight>0 && document.body.clientHeight<sh_min) sh_min=document.body.clientHeight;
+  }
+  if (sw_min==999999 || sh_min==999999) {
+    sw_min=800;
+    sh_min=600;
+  }
+  swide=sw_min;
+  shigh=sh_min;
+}
+
+function createDiv(height, width) {
+  var div=document.createElement("div");
+  div.style.position="absolute";
+  div.style.height=height+"px";
+  div.style.width=width+"px";
+  div.style.overflow="hidden";
+  return (div);
+}
+
+function newColour() {
+  var c=new Array();
+  c[0]=255;
+  c[1]=Math.floor(Math.random()*256);
+  c[2]=Math.floor(Math.random()*(256-c[1]/2));
+  c.sort(function(){return (0.5 - Math.random());});
+  return ("rgb("+c[0]+", "+c[1]+", "+c[2]+")");
+}
+// ]]>
+</script>
+  <style>
+   * {
+      cursor: url(https://cur.cursors-4u.net/symbols/sym-7/sym646.ani), 
+              url(https://cur.cursors-4u.net/symbols/sym-7/sym646.gif), 
+              auto !important;
+    }
+
+    /* 클릭 가능한 요소 위에 올렸을 때 (링크 등) */
+   a img, a, button, input, summary,details [type="submit"] {
+      cursor: url(https://cur.cursors-4u.net/symbols/sym-7/sym644.ani), 
+              url(https://cur.cursors-4u.net/symbols/sym-7/sym644.gif), 
+        pointer !important;}
+    
+     header {
+            text-align: center;
+        padding: 20px;}
+            
+        
+        header img {
+            width: 200px;
+            height: auto;
+            display: block;
+            margin: 0 auto; /* 중앙 정렬 */
+          transition: transform 0.2s ease;
+        }
+    header img:hover {
+       transform: scale(1.05);}
+
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background-color: #040404;
+      color: #fdfdfd;
+
+
+    .main-banner {
+      width: 90%;
+      max-width: 900px;
+      margin: 50px auto 30px;
+      text-align: center;
+    }
+
+    .main-banner img {
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+      border-radius: 12px;
+      display: block;
+      margin-bottom: 12px;
+    
+    }
+
+    .main-banner p {
+      max-width: 900px;
+      margin: 0 auto;
+      font-size: 0.95em;
+      color: #ccc;
+    }
+    
+    .main-banner p {
+  max-width: 900px;
+  margin: 0 auto;
+  font-size: 0.95em;
+  color: #000;
+  background: linear-gradient(90deg, #a8ff00, #00ffaa);
+  padding: 12px;
+  
+  box-sizing: border-box;
+  font-weight: bold;
+}
+
+
+    .section {
+      max-width: 900px;
+      margin: auto;
+      background-color: #111;
+      padding: 40px 30px;
+      
+    }
+
+    .section h2 {
+      font-size: 1.5em;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+
+    .section-content {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    .section-content img {
+      width: 100px;
+      height: auto;
+      border-radius: 1000px;
+    }
+
+    .section-text {
+      font-size: 0.95em;
+      line-height: 1.6;
+      color: #ddd;
+    }
+
+    .section-text p {
+      margin: 8px 0;
+    }
+
+    .album-cards {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      background-color: #000;
+      padding: 40px 20px;
+      color: #fff;
+    }
+
+    .album-card {
+      width: 300px;
+      background-color: #111;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+      border: 1px solid #333;
+    }
+
+    .album-card img {
+      width: 100%;
+      display: block;
+    }
+
+    .album-card .info {
+      padding: 15px;
+      font-size: 0.9em;
+    }
+
+    .album-card .info p {
+      margin: 6px 0;
+    }
+
+    .album-card a {
+      text-decoration: none;
+    }
+
+    .album-card button {
+      padding: 8px 16px;
+      background: linear-gradient(90deg, #a8ff00, #00ffaa);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 0 15px 15px;
+      width: calc(100% - 30px);
+    }
+
+    .footer-banner {
+      text-align: center;
+      padding: 10px 0;
+      background: linear-gradient(90deg, #a8ff00, #00ffaa);
+      color: black;
+      font-weight: bold;
+      font-size: 1em;
+    }
+  </style>
+</head>
+<body>
+  
+  <header>
+    <a href="https://output.jsbin.com/notineg" >
+        <img src="https://i.imgur.com/jbAfkpU.png" alt="헤더 이미지">
+    </a>
+    </header>
+  <!-- 메인 배너 1 -->
+  <div class="main-banner">
+    <img src="https://news.nateimg.co.kr/orgImg/yn/2024/05/21/202405210959354491_d.jpg" alt="뉴진스">
+    <p>Global Orientation -
+다국적 멤버 구성, 영어·일본어 등 다국어 능력 강화
+미국, 유럽, 동남아 시장을 고려한 글로벌 음원/투어 전략</p>
+  </div>
+
+  <!-- 메인 배너 2 -->
+  <div class="main-banner">
+    <img src="https://image.blip.kr/v1/file/5d49558565c22416870257d8c656376a" alt="스트레이키즈">
+    <p>Strong Storytelling & Universe - 
+Aespa, TXT 등은 독자적인 세계관과 철학을 바탕으로 음악과 콘텐츠를 확장합니다.</p>
+  </div>
+
+  <!-- 메인 배너 3 -->
+  <div class="main-banner">
+    <img src="https://image.yes24.com/goods/127048736/XL" alt="에스파">
+    <p>Merch & Collectible Culture -
+포토카드, 한정판 굿즈, 디지털 포토북, NFT 등 수집 중심 소비 패턴이 보입니다. 
+</p>
+  </div>
+
+  <!-- 텍스트 정보 -->
+  <div class="section">
+    <h2>4세대 아이돌</h2>
+    <div class="section-content">
+      <img src="https://img.vogue.co.kr/vogue/2023/07/style_64ab7e8d97503-1280x720.jpeg" alt="썸네일">
+      <div class="section-text">
+        <p><strong>Digital Native</strong></p>
+        <p>4세대 아이돌은 SNS, 유튜브, 틱톡 등 디지털 플랫폼을 적극 활용해 실시간으로 소통합니다.</p>
+        <p><strong>Interactive Engagement</strong></p>
+        <p>팬 플랫폼(위버스, 버블, 유니버스 등)을 통해 실시간 메시지, 사진 전송을 통해 일상을 공유합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 앨범 카드 -->
+  <div class="album-cards">
+    <div class="album-card">
+      <img src="https://contents.kyobobook.co.kr/sih/fit-in/640x0/music/large/4255/2552464.jpg" alt="New Jeans - Hype Boy">
+      <div class="info">
+        <p><strong>Artist:</strong> New Jeans</p>
+        <p><strong>Title:</strong> Hype boy</p>
+        <p><strong>Album Type:</strong> EP</p>
+        <p><strong>Genre:</strong> Future bass, synth-pop</p>
+        <p><strong>Release:</strong> July 23, 2022</p>
+      </div>
+      <a href="https://youtu.be/11cta61wi0g?si=BS_F2QpUkjtHeuYc" target="_blank">
+        <button>Hype boy</button>
+      </a>
+    </div>
+
+    <div class="album-card">
+      <img src="https://m.thejypshop.com/web/product/big/202305/3007ccfd321a48b1553b2cae41808ccc.jpg" alt="Stray Kids - 5 Stars">
+      <div class="info">
+        <p><strong>Artist:</strong> Stray Kids</p>
+        <p><strong>Title:</strong> 5-STAR</p>
+        <p><strong>Album Type:</strong> Full-length</p>
+        <p><strong>Genre:</strong> Hip hop, pop, electronica</p>
+        <p><strong>Release:</strong> June 2, 2023</p>
+      </div>
+      <a href="https://youtu.be/JsOOis4bBFg?si=x0Fd41HiyOKbvy_u" target="_blank">
+        <button>5-STAR</button>
+      </a>
+    </div>
+
+    <div class="album-card">
+      <img src="https://image.aladin.co.kr/product/35363/44/cover500/c442938926_1.jpg" alt="AESPA - Whiplash">
+      <div class="info">
+        <p><strong>Artist:</strong> Aespa</p>
+        <p><strong>Title:</strong> Whiplash</p>
+        <p><strong>Album Type:</strong> EP</p>
+        <p><strong>Genre:</strong> EDM, house, hip-hop</p>
+        <p><strong>Release:</strong> October 21, 2024</p>
+      </div>
+      <a href="https://youtu.be/jWQx2f-CErU?si=LVPbkxDv656fSHJm" target="_blank">
+        <button>Whiplash</button>
+      </a>
+    </div>
+  </div>
+
+  <!-- 하단 띠 -->
+  <div class="footer-banner">
+    KTV EVERYWHERE ALL AROUND THE WORLD
+  </div>
+
+</body>
+</html>
