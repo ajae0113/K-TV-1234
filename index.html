@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>3세대 K-POP</title>
+   <script type="text/javascript">
+// <![CDATA[
+var colour="random"; // in addition to "random" can be set to any valid colour eg "#f0f" or "red"
+var sparkles=50;
+
+/****************************
+*  Tinkerbell Magic Sparkle *
+*(c)2005-13 mf2fm web-design*
+*  http://www.mf2fm.com/rv  *
+* DON'T EDIT BELOW THIS BOX *
+****************************/
+var x=ox=400;
+var y=oy=300;
+var swide=800;
+var shigh=600;
+var sleft=sdown=0;
+var tiny=new Array();
+var star=new Array();
+var starv=new Array();
+var starx=new Array();
+var stary=new Array();
+var tinyx=new Array();
+var tinyy=new Array();
+var tinyv=new Array();
+
+window.onload=function() { if (document.getElementById) {
+  var i, rats, rlef, rdow;
+  for (var i=0; i<sparkles; i++) {
+    var rats=createDiv(3, 3);
+    rats.style.visibility="hidden";
+    rats.style.zIndex="999";
+    document.body.appendChild(tiny[i]=rats);
+    starv[i]=0;
+    tinyv[i]=0;
+    var rats=createDiv(5, 5);
+    rats.style.backgroundColor="transparent";
+    rats.style.visibility="hidden";
+    rats.style.zIndex="999";
+    var rlef=createDiv(1, 5);
+    var rdow=createDiv(5, 1);
+    rats.appendChild(rlef);
+    rats.appendChild(rdow);
+    rlef.style.top="2px";
+    rlef.style.left="0px";
+    rdow.style.top="0px";
+    rdow.style.left="2px";
+    document.body.appendChild(star[i]=rats);
+  }
+  set_width();
+  sparkle();
+}}
+
+function sparkle() {
+  var c;
+  if (Math.abs(x-ox)>1 || Math.abs(y-oy)>1) {
+    ox=x;
+    oy=y;
+    for (c=0; c<sparkles; c++) if (!starv[c]) {
+      star[c].style.left=(starx[c]=x)+"px";
+      star[c].style.top=(stary[c]=y+1)+"px";
+      star[c].style.clip="rect(0px, 5px, 5px, 0px)";
+      star[c].childNodes[0].style.backgroundColor=star[c].childNodes[1].style.backgroundColor=(colour=="random")?newColour():colour;
+      star[c].style.visibility="visible";
+      starv[c]=50;
+      break;
+    }
+  }
+  for (c=0; c<sparkles; c++) {
+    if (starv[c]) update_star(c);
+    if (tinyv[c]) update_tiny(c);
+  }
+  setTimeout("sparkle()", 40);
+}
+
+function update_star(i) {
+  if (--starv[i]==25) star[i].style.clip="rect(1px, 4px, 4px, 1px)";
+  if (starv[i]) {
+    stary[i]+=1+Math.random()*3;
+    starx[i]+=(i%5-2)/5;
+    if (stary[i]<shigh+sdown) {
+      star[i].style.top=stary[i]+"px";
+      star[i].style.left=starx[i]+"px";
+    }
+    else {
+      star[i].style.visibility="hidden";
+      starv[i]=0;
+      return;
+    }
+  }
+  else {
+    tinyv[i]=50;
+    tiny[i].style.top=(tinyy[i]=stary[i])+"px";
+    tiny[i].style.left=(tinyx[i]=starx[i])+"px";
+    tiny[i].style.width="2px";
+    tiny[i].style.height="2px";
+    tiny[i].style.backgroundColor=star[i].childNodes[0].style.backgroundColor;
+    star[i].style.visibility="hidden";
+    tiny[i].style.visibility="visible"
+  }
+}
+
+function update_tiny(i) {
+  if (--tinyv[i]==25) {
+    tiny[i].style.width="1px";
+    tiny[i].style.height="1px";
+  }
+  if (tinyv[i]) {
+    tinyy[i]+=1+Math.random()*3;
+    tinyx[i]+=(i%5-2)/5;
+    if (tinyy[i]<shigh+sdown) {
+      tiny[i].style.top=tinyy[i]+"px";
+      tiny[i].style.left=tinyx[i]+"px";
+    }
+    else {
+      tiny[i].style.visibility="hidden";
+      tinyv[i]=0;
+      return;
+    }
+  }
+  else tiny[i].style.visibility="hidden";
+}
+
+document.onmousemove=mouse;
+function mouse(e) {
+  if (e) {
+    y=e.pageY;
+    x=e.pageX;
+  }
+  else {
+    set_scroll();
+    y=event.y+sdown;
+    x=event.x+sleft;
+  }
+}
+
+window.onscroll=set_scroll;
+function set_scroll() {
+  if (typeof(self.pageYOffset)=='number') {
+    sdown=self.pageYOffset;
+    sleft=self.pageXOffset;
+  }
+  else if (document.body && (document.body.scrollTop || document.body.scrollLeft)) {
+    sdown=document.body.scrollTop;
+    sleft=document.body.scrollLeft;
+  }
+  else if (document.documentElement && (document.documentElement.scrollTop || document.documentElement.scrollLeft)) {
+    sleft=document.documentElement.scrollLeft;
+    sdown=document.documentElement.scrollTop;
+  }
+  else {
+    sdown=0;
+    sleft=0;
+  }
+}
+
+window.onresize=set_width;
+function set_width() {
+  var sw_min=999999;
+  var sh_min=999999;
+  if (document.documentElement && document.documentElement.clientWidth) {
+    if (document.documentElement.clientWidth>0) sw_min=document.documentElement.clientWidth;
+    if (document.documentElement.clientHeight>0) sh_min=document.documentElement.clientHeight;
+  }
+  if (typeof(self.innerWidth)=='number' && self.innerWidth) {
+    if (self.innerWidth>0 && self.innerWidth<sw_min) sw_min=self.innerWidth;
+    if (self.innerHeight>0 && self.innerHeight<sh_min) sh_min=self.innerHeight;
+  }
+  if (document.body.clientWidth) {
+    if (document.body.clientWidth>0 && document.body.clientWidth<sw_min) sw_min=document.body.clientWidth;
+    if (document.body.clientHeight>0 && document.body.clientHeight<sh_min) sh_min=document.body.clientHeight;
+  }
+  if (sw_min==999999 || sh_min==999999) {
+    sw_min=800;
+    sh_min=600;
+  }
+  swide=sw_min;
+  shigh=sh_min;
+}
+
+function createDiv(height, width) {
+  var div=document.createElement("div");
+  div.style.position="absolute";
+  div.style.height=height+"px";
+  div.style.width=width+"px";
+  div.style.overflow="hidden";
+  return (div);
+}
+
+function newColour() {
+  var c=new Array();
+  c[0]=255;
+  c[1]=Math.floor(Math.random()*256);
+  c[2]=Math.floor(Math.random()*(256-c[1]/2));
+  c.sort(function(){return (0.5 - Math.random());});
+  return ("rgb("+c[0]+", "+c[1]+", "+c[2]+")");
+}
+// ]]>
+</script>
+
+
+  <style>
+     header {
+            text-align: center;
+        padding: 20px;}
+            
+        
+        header img {
+            width: 200px;
+            height: auto;
+            display: block;
+            margin: 0 auto; /* 중앙 정렬 */
+        }
+    * {
+      cursor: url(https://cur.cursors-4u.net/symbols/sym-7/sym646.ani), 
+              url(https://cur.cursors-4u.net/symbols/sym-7/sym646.gif), 
+              auto !important;
+    }
+
+    img, a, button, input, summary,details [type="submit"] {
+      cursor: url(https://cur.cursors-4u.net/symbols/sym-7/sym644.ani), 
+              url(https://cur.cursors-4u.net/symbols/sym-7/sym644.gif), 
+        pointer !important;}
+
+
+@font-face {
+    font-family: 'Yak';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2205-2@1.0/Yak.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+.reenie-beanie-regular {
+  font-family: "Reenie Beanie", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+    
+    
+    }
+
+    html{
+     background-color: #fffdeb;
+    }
+    
+
+body {
+  margin: 0;
+  padding: 0;;
+  font-family: sans-serif;
+  display:
+  justify-content: center;
+  align-items: center;
+  height: 100vh; 
+background-color: #fffdeb;
+  overflow-y: auto;
+}
+
+
+.container {
+  
+  font-family: 'Yak';
+  position: relative;
+  width: 2000px;
+  min-height: 1280px;
+  margin: auto;
+  padding: 30px 20px;
+  background-color: #fffdeb;
+  z-index: 2;
+  overflow: hidden;
+    text-align: left
+}
+  
+
+      
+    .bg-image {
+      position: absolute;
+      top: 280px; 
+      left: 60%;
+      transform: translateX(-50%);
+      width: 700px;
+      pointer-events: none; 
+    }
+  .bg-image2 {
+      position: absolute;
+      top: 280px; 
+      left: 60%;
+      transform: translateX(-50%);
+      width: 1500px;
+      z-index: 0; 
+      pointer-events: none; 
+    }
+
+    .row1 {
+
+      display: flex;
+      justify-content: space-between;
+      margin-bottom:10px;
+      position: relative;
+  flex-direction: column; 
+}
+    }
+   .row2 {
+      width: 1300px;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 30px;
+      position: relative;
+  flex-direction: column; 
+  padding: 20px;
+}
+    
+    
+    .column {
+      width: 60%; 
+      margin: 10px;
+      padding:80px;
+    
+    }
+   
+       
+    .box1{
+      
+      background-color:#fff2ef;
+      color:#fff2ef;
+      height:5em;
+      border-bottom:5px solid #b9c1d7;
+      border-style: dotted;
+    }
+      .box2{
+      
+      background-color:#fff2ef;
+      color:#fff2ef;
+      height:5em;
+      border-top:5px solid #b9c1d7;
+      border-style: dotted;
+    } 
+    .title1 {
+  
+      font-size: 2em;
+      margin-top: 30px;
+      margin-bottom:10px;
+      font-family: 'Yak';
+      color: #9a9aae;
+      background-color: #fff2ef;
+      border-radius: 50px;
+
+    }
+   .title2 {
+
+
+      margin-top: 10px;
+      margin-bottom:10px;
+      font-family: 'Yak';
+      color: #9a9aae;
+      background-color: #fff2ef;
+      border-radius: 50px;
+      font-size:1.7em;
+    }
+  .title3 {
+
+      margin-top: 0px;
+      margin-bottom:10px;
+      font-family: 'Yak';
+      color: #9a9aae;
+      background-color: #fff2ef;
+      border-radius: 50px;
+      font-size:1.7em;
+    }
+      .title4 {
+      margin-bottom:10px;
+      font-family: 'Yak';
+      color: #9a9aae;
+      background-color: #fff2ef;
+   border-radius: 50px;
+      font-size:1.7em;
+    }
+          .title5 {
+ 
+      font-size: 3em;
+      margin-top:px;
+      margin-bottom:10px;
+      font-family: 'Yak';
+      color: #9a9aae;
+      background-color: #fff2ef;
+     border-radius: 50px;
+      font-size:1.7em;
+    }
+    .text {
+
+      font-size: 1.3em;
+      line-height: 1.6;
+      color: #455075;
+
+
+    }
+    .center{
+      
+font-family: "Reenie Beanie", cursive;
+      text-align: center;
+      font-size: 9em;
+      color: #b9c1d7;
+      margin: -60px ;
+      position: top;
+      z-index: 9;
+    }
+    .top{
+      font-family: "Reenie Beanie", cursive;
+       color: #b9c1d7;
+       font-size: 9em;
+    }
+    .link {
+      text-align: center;
+      margin-top: 100px;
+      font-size: 14px;
+      position: relative;
+      z-index: 2;
+      
+    }
+        details {
+
+      clear: both;
+    }
+
+    summary {
+      cursor: pointer;
+      font-size:2em;
+      font-family: 'Yak';
+   z-index: 3; 
+
+    }
+
+    details[open] summary {
+     
+    }
+details {
+
+    margin-top: -200px;
+   z-index: 5;
+  position: relative;
+  
+}
+    .idol-card {
+      width: 50%;
+      background: #fffdf8;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+   
+      padding: 10px;
+      text-align: center;
+       position: relative;
+      z-index: 3; 
+      margin:5%;
+ 
+    }
+
+    .idol-card img {
+      width: 70%;
+      border-radius: 2px;
+      padding:10px;
+    }
+
+    .idol-card .info {
+      text-align: left;
+      font-size: 14px;
+      margin-top: 10px;
+padding:10px;
+    }
+
+    .idol-card .link {
+      margin-top: 15px;
+      padding: 5px 10px;
+      border: 1px solid #000;
+      border-radius: 5px;
+      display: inline-block;
+      text-decoration: none;
+      color: black;
+      font-size: 14px;
+    }
+ #content {
+  display: flex;
+   width: 1500px;
+  justify-content: center;
+  flex-wrap: nowrap; 
+margin-top: 100px;
+  gap: 10px; 
+  overflow-x: auto; 
+}
+
+    span{
+      background-color:#fff2ef;
+      color: #9a9aae;
+      border-radius: 50px;
+    }
+ 
+  </style>
+</head>
+<body>
+  
+  <div class=" box1">Letterbox Overlay</div>
+   
+<header>
+    <a href="https://output.jsbin.com/mavidev" target="_blank">
+        <img src="https://i.imgur.com/jbAfkpU.png" alt="헤더 이미지">
+    </a>
+  
+    </header>
+  
+  <div class="container">
+<div class="top">
+     <p>Let our friendship last forever...... Let our friendship last forever...... Let our friendship last forever...... 
+    </div>
+   
+  
+    <img class="bg-image2" src="https://i.imgur.com/O39XmIk.png" alt="버블">
+    <img class="bg-image" src="https://i.imgur.com/JzVKoXk.png" alt="배경 이미지">
+    
+
+    <div class="row1">
+      <div class="column">
+        <div class="title1"><strong>3세대 K-POP</strong></div>
+        <div class="text" >
+  K-pop에서의 3세대란 기본적으로 2015년 즈음을 가리킨다.
+          2세대에 비해 음악 스타일이 다양해지고 퍼포먼스에서 더욱
+          전략적인 모습을 띄는 것이 특징이다.<br> 또한 발달한 소셜미디어(SNS)를
+          활용한 홍보로 음악 공유가 활발히 일게 되면서,
+           K-pop은 세계무대로 나아가게 되었다.<br>
+        </div>
+                 <div class="column">
+        <div class="title2"><strong>3세대 K-pop의 음악적 특징</strong></div>
+        <div class="text">
+          <ul>
+          <li> 세계관 중심의 스토리텔링</li>
+EXO는 초능력 설정을 바탕으로, BTS는 ‘화양연화’ 시리즈를 통해 각기 독창적인 세계관을 구축하여 음악과 콘텐츠를 연결함<br>
+
+          <li>음악적 진정성과 자기 고백</li>
+BTS는 멤버들이 직접 작사·작곡에 참여하며 청춘, 사회 문제, 자아 탐색 등의 주제를 진솔하게 담아냄<br>
+
+          <li>장르의 다양성과 실험성</li>
+Red Velvet은 팝과 R&B를 넘나드는 ‘레드’와 ‘벨벳’ 콘셉트를 통해 다양한 음악 스타일을 선보임
+
+          <li>글로벌 협업과 영어 가사 활용</li>
+BLACKPINK와 BTS는 서구 아티스트들과의 협업을 통해 영어 가사를 적극 활용하며 글로벌 시장에 진출함
+
+          <li>SNS 기반의 팬덤 형성과 소통</li>
+유튜브, 트위터, 인스타그램 등을 활용하여 팬들과의 실시간 소통을 강화하고, 팬덤의 자발적인 콘텐츠 생산을 유도함
+
+ </ul>
+        </div>
+
+
+      </div>
+ <div class="column">
+        <div class="title4"><strong>팬덤의 사회적 참여</strong></div>
+        <div class="text">
+         <ul>
+      <li>기부 캠페인, 환경 운동, 사회적 메시지 확산 등에 등장<br>
+          예) 방탄소년단 ‘Love Myself 캠페인’ ~ 아이돌 연대 기부 활동<br>
+          <li>팬덤 이용으로 광고 구매, 지하철 광고, 타임스퀘어 생일 광고 등도 유행
+            </ul>
+        </div>
+      </div>
+      <div class="column">
+        <div class="title4"><strong>주요 플랫폼</strong></div>
+        <div class="text">
+         <ul>
+        <li> 유튜브 (YouTube)
+뮤직비디오, 자체 콘텐츠 공개
+          글로벌 팬 유입 및 대중성 확보 </li>
+
+ <li>V LIVE / 위버스
+실시간 소통용 라이브 방송
+팬과의 친밀도 강화, 비하인드 공개
+          </li>
+<li>트위터 / 인스타그램
+빠른 소통, 팬덤 활동 중심지
+해시태그·사진 중심 홍보 및 셀프 브랜딩 </li>
+
+ <li>팬카페 / 공식 앱
+공식 소식 전달, 팬 모집 및 관리
+굿즈 판매, 팬미팅 등 운영 거점
+ </li> <li>
+웹예능 / 자체 리얼리티
+그룹 자체 콘텐츠로 팬덤 결속력 강화
+유튜브 등을 통해 주기적 공개</li>
+          </ul>
+        </div>
+      </div>
+        <div class="column">
+        <div class="title5"><strong>주요 뮤직비디오 키워드</strong></div>
+        <div class="text">
+          <ul> <li>우정, 감성 필터, 초커, 컬러 염색, 네온 사인, 테니스장, Synthwave, Vaporwave, VHS aesthetic ,원색, 핑크색 </li>
+            특히 3세대의 k-pop뮤직 비디오의 재미있는 부분은 Letterbox Overlay 효과를 자주 사용한다는 것이다.<br>
+            화면 위 아래에 색이나 그래픽을 씌워 영화같은 프레임감을 주는 방식이다.
+           위의 키워드를 살펴보면 감성적인 영화를 표현하려고 하는 느낌을 받을 수 있다.
+         </ul>
+          
+
+        </div>
+      </div>
+    </div>
+    </div>
+
+
+       <div class="center">3RD GENERATION K-POP</div>      
+
+    <div class="row2">
+ 
+    </div>
+
+    <details>
+      <summary><span style="background-color: #343434; color:#e5c6db;" >ৎ 3세대 대표 아이돌 ୭ </span></summary><br>
+      <div id="content"> 
+        <div class="idol-card">
+          <img src="https://i.imgur.com/uyndkLI.png" alt="BTS">
+          <div class="info">
+       <strong><span>Artist:</strong> BTS<br>
+            <strong><span>Title:</span></strong> 봄날 (Spring Day)<br><br>
+<strong><span>Album Type:</span></strong> Special Album<br>
+<strong><span>Genre:</span></strong> Ballad / Alternative Hip-Hop<br><br>
+<strong><span>Style:</span></strong> Sentimental Pop / Soft Rap<br>
+<strong><span>Release Date:</span></strong> February 13, 2017
+          </div>
+          <a class="link" target="balnk" href="https://youtu.be/xEeFrLSkMm8?si=cRD-kRYbwtPTIQLW">music video link</a>
+        </div>
+
+        <div class="idol-card">
+          <img src="https://i.imgur.com/FYZ6U5X.png" alt="BLACKPINK">
+          <div class="info">
+ <strong><span>Artist:</span></strong> BLACKPINK<br>
+<strong><span>Title:</span></strong> STAY<br><br>
+<strong><span>Album Type:</span></strong> Digital Single<br>
+<strong><span>Genre:</span></strong> Acoustic Pop / Ballad<br><br>
+<strong><span>Style:</span></strong> Folk Pop Ballad<br>
+<strong><span>Release Date:</span></strong> November 1, 2016
+          </div>
+          <a class="link" target="balnk" href="https://youtu.be/FzVR_fymZw4?si=Z4r5Nk9qgB1y9qH6">music video link</a>
+        </div>
+
+        <div class="idol-card">
+          <img src="https://i.imgur.com/lyr8cgO.png" alt="Red Velvet">
+          <div class="info">
+<strong><span>Artist:</span></strong> Red Velvet<br>
+<strong><span>Title:</span></strong> Ice Cream Cake<br><br>
+<strong><span>Album Type:</span></strong> EP (Mini Album)<br>
+<strong><span>Genre:</span></strong> Dance / Pop<br><br>
+<strong><span>Style:</span></strong> Experimental Dance Pop<br>
+<strong><span>Release Date:</span></strong> March 17, 2015
+          </div>
+          <a class="link" target="balnk" href="https://youtu.be/glXgSSOKlls?si=lB2S9eSOnDrCbAcg">music video link</a>
+        </div>
+      </div>
+    </details>
+
+  </div>
+
+    <div class=" box2">Letterbox Overlay</div>
+</body>
+</html>
